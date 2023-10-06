@@ -14,6 +14,18 @@
   max-height: 100vh;
   background-color: var(--ShowDetailsbgColor1), var(--ShowDetailsbgColor2);
 }
+#filterData {
+  height: 99vh;
+  margin-right: 20px;
+  margin-left: 20px;
+  background-color: #496cde;
+  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px,
+    rgba(6, 24, 44, 0.65) 0px 4px 6px -1px,
+    rgba(236, 155, 155, 0.08) 0px 1px 0px inset;
+  border-radius: 2px;
+  
+}
+
 * {
   padding: 0;
   margin: 0;
