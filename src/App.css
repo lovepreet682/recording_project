@@ -1,30 +1,55 @@
 :root {
-  --ShowDetailsbgColor1: rgb(34, 193, 195);
-  --ShowDetailsbgColor2: linear-gradient(
-    0deg,
-    rgba(34, 193, 195, 1) 0%,
-    rgba(53, 123, 212, 1) 50%,
-    rgba(97, 45, 253, 1) 100%
-  );
+  --ShowDetailsbgColor1: #e0e0e0;
+  --FilterbgColor: rgb(202, 202, 202);
+  --IconsBgColor: rgb(38, 38, 235)
 }
 
 /* Show Details */
 #showDetails {
   max-width: 100%;
   max-height: 100vh;
-  background-color: var(--ShowDetailsbgColor1), var(--ShowDetailsbgColor2);
+  background-color: var(--ShowDetailsbgColor1);
 }
+#showDetails .search .form-control {
+  border-radius: 10px;
+  border: 1px solid #a7a7a7;
+}
+
+.overflow-table {
+  height: 50%; /* Set the fixed height as needed */
+  overflow-y: auto;
+}
+
 #filterData {
   height: 99vh;
-  margin-right: 20px;
   margin-left: 20px;
-  background-color: #496cde;
-  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px,
-    rgba(6, 24, 44, 0.65) 0px 4px 6px -1px,
-    rgba(236, 155, 155, 0.08) 0px 1px 0px inset;
-  border-radius: 2px;
-  
+  background-color: var(--FilterbgColor);
+  border-radius: 10px;
+  border: 1px solid #a7a7a7;
+  border-radius: 10px;
+  overflow: auto;
+  color: black;
 }
+
+.Audio_transcript{
+  border: 1px solid #a7a7a7;
+  border-radius: 10px;
+}
+#audioPlayerbackground {
+  border-radius: 1px var(--FilterbgColor);
+  background-color: white;
+  border-radius: 10px;
+}
+
+.transcript{
+  border-radius: 1px var(--FilterbgColor);
+  background-color: white;
+  border: 1px solid var(--FilterbgColor);
+  border-radius: 10px;
+}
+
+
+
 
 * {
   padding: 0;
@@ -45,68 +70,33 @@ a {
   color: #ffc107;
 }
 
-/* Login form  */
-.gradient-custom-2 {
-  /* fallback for old browsers */
-  background: #fccb90;
 
-  /* Chrome 10-25, Safari 5.1-6 */
-  background: -webkit-linear-gradient(
-    to right,
-    #ee7724,
-    #d8363a,
-    #dd3675,
-    #b44593
-  );
-
-  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
-}
-
-@media (min-width: 768px) {
-  .gradient-form {
-    height: 100vh !important;
-  }
-}
-@media (min-width: 769px) {
-  .gradient-custom-2 {
-    border-top-right-radius: 0.3rem;
-    border-bottom-right-radius: 0.3rem;
-  }
-}
 
 /* Send Mail */
-#sendMailpage {
-  background: rgb(34, 193, 195);
-  background: linear-gradient(
-    0deg,
-    rgba(34, 193, 195, 1) 0%,
-    rgba(53, 123, 212, 1) 50%,
-    rgba(97, 45, 253, 1) 100%
-  );
-  width: 100%;
-  min-height: 100vh;
+#LoginBox {
+  width: 100wh;
+  height: 100vh;
+  background-color: var(--ShowDetailsbgColor1);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
   color: white;
 }
 
-#sendMailBox {
+#InnerLoginBox {
   width: 25rem;
   height: 30rem;
-  border: 2px solid black;
+  border: 1px solid rgb(194, 194, 194);;
   border-radius: 20px;
   padding: 20px;
-  background: rgb(2, 0, 36);
-  background: linear-gradient(
-    90deg,
-    rgba(2, 0, 36, 1) 0%,
-    rgba(9, 9, 121, 1) 35%,
-    rgba(0, 212, 255, 1) 100%
-  );
+  color: black;
+  background-color: var(--FilterbgColor);
 }
 
+/* iconsColor */
+#iconsColor{
+  background-color:var(--IconsBgColor);
+}
 /*ShowDetails  */
 #ShowDetailsCol_2 {
   background: rgb(2, 0, 36);
@@ -117,9 +107,18 @@ a {
     rgba(0, 212, 255, 1) 100%
   );
 }
+
+.fullwidthIcons{
+  float: right;
+  color: blue;
+  cursor: pointer;
+}
+.transcriptHeading{
+  padding-left: 40%;
+}
 /* TabSection */
 #iconsbar {
-  width: 3rem;
+  padding: 0px 5px;
   height: 100vh;
 }
 
@@ -129,15 +128,14 @@ ul li a {
 
 /* Recording */
 #recording {
-  background: rgb(34, 193, 195);
-  background: linear-gradient(
-    180deg,
-    rgba(34, 193, 195, 1) 0%,
-    rgba(53, 123, 212, 1) 50%,
-    rgba(97, 45, 253, 1) 100%
-  );
-  height: 39rem;
+  background-color: var(--ShowDetailsbgColor1);
+  height: 100vh;
   width: 100%;
+}
+
+.recordingBox{
+  border: 1px solid black;
+  border-radius: 15px;
 }
 .recordingBox {
   width: 13rem;
@@ -158,23 +156,6 @@ ul li a {
   color: #b44593;
 }
 
-#showDetails {
-  height: 100vh;
-  background: rgb(34, 193, 195);
-  background: linear-gradient(
-    180deg,
-    rgba(34, 193, 195, 1) 0%,
-    rgba(53, 123, 212, 1) 50%,
-    rgba(97, 45, 253, 1) 100%
-  );
-}
-
-#audioPlayerbackground {
-  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px,
-    rgba(6, 24, 44, 0.65) 0px 4px 6px -1px,
-    rgba(236, 155, 155, 0.08) 0px 1px 0px inset;
-  border-radius: 10px;
-}
 
 /* ShowDetails */
 #ShowDetailsCol_2 {
@@ -184,17 +165,9 @@ ul li a {
   border-radius: 10px;
 }
 #boxStyling {
-  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px,
-    rgba(6, 24, 44, 0.65) 0px 4px 6px -1px,
-    rgba(236, 155, 155, 0.08) 0px 1px 0px inset;
   border-radius: 10px;
-  background: rgb(2, 0, 36);
-  background: linear-gradient(
-    90deg,
-    rgba(2, 0, 36, 1) 0%,
-    rgba(9, 9, 121, 1) 35%,
-    rgba(0, 212, 255, 1) 100%
-  );
+  overflow: auto;
+  min-height: 50%;
 }
 #userform_login {
   background: rgb(34, 193, 195);
@@ -217,10 +190,7 @@ ul li a {
 .data1 {
   font-size: 16px;
 }
-.transcript {
-  background-color: white;
-  color: black;
-}
+
 
 /* Media Query */
 @media (width: 550px) {

@@ -25,11 +25,11 @@ function Login() {
 
     return (
         <>
-            <div id="LoginBox">
+            <div id="">
                 <div className="container-fluid">
                     <div className="row">
-                        <div id='sendMailpage' className='pt-4'>
-                            <div className="container sendMail" id='sendMailBox'>
+                        <div id='LoginBox' className='pt-4'>
+                            <div className="container sendMail" id='InnerLoginBox'>
                                 <form onSubmit={handleLogin}>
                                     <h4 className='text-center mb-2'> Login </h4>
                                     {/* Show the Error message */}
