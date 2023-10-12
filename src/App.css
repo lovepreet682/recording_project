@@ -16,8 +16,7 @@
 }
 
 .overflow-table {
-  height: 50%; /* Set the fixed height as needed */
-  overflow-y: auto;
+  
 }
 
 #filterData {
@@ -167,7 +166,7 @@ ul li a {
 #boxStyling {
   border-radius: 10px;
   overflow: auto;
-  min-height: 50%;
+  max-height: 350px;
 }
 #userform_login {
   background: rgb(34, 193, 195);

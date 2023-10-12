@@ -15,9 +15,7 @@ function Tab_navbar() {
                 <div className="row">
                     <div className="col-auto min-vh-100" id='iconsColor'>
                         <ul className='list-unstyled' id='iconsbar'>
-                            <li className='text-center'><NavLink to="home" className='fs-2'> <AiOutlineHome />
-
-                            </NavLink></li>
+                            <li className='text-center'><NavLink to="home" className='fs-2'> <AiOutlineHome /></NavLink></li>
                             <li className='text-center'><NavLink to="network" className='fs-2'><GiNetworkBars /></NavLink></li>
                             <li className='text-center'><NavLink to="setting" className='fs-2'><FiSettings /></NavLink></li>
                             <li className='text-center'><NavLink to="down" className='fs-2'><BsLink45Deg /></NavLink></li>

@@ -30,32 +30,41 @@ function ShowDetails() {
         type: "",
     });
 
-    const [selectedFilter, setSelectedFilter] = useState(""); // Default: no filter
-    const [selectedDurationOption, setSelectedDurationOption] = useState(null);
+    const [selectIncOutCall, setSelectIncOutCall] = useState(""); // Default: no filter
+    const [selectedDurationLongShort, setSelectedDurationLongShort] = useState(null);
+
+    //Handle the Longest And Shortest
     const handleDurationOptionChange = (e) => {
-        setSelectedDurationOption(e.target.value);
-        console.log(e.target.value, "Hello");
-        // console.log(selectedDurationOption);
-        // console.log(selectedFilter,"my Filter");
-        applyFilter(" ", range, e.target.value);
+        setSelectedDurationLongShort(e.target.value);
+        applyFilter(" ", " ", e.target.value);
     };
 
+    const handleFilterChange = (e) => {
+        const selectedType = e.target.value;
+        console.log(selectedType);
+        // Update the selected filter type state
+        setSelectIncOutCall(selectedType);
+        // console.log(setSelectIncOutCall(selectedType));
+        applyFilter(selectedType, "", "")
+
+    };
+
+    // console.log(selectIncOutCall);
     const applyFilter = (filterType, durationRange, durationOption) => {
         // Filter the search data based on the selected filter type
         let filteredData = searchData;
-        // console.log(filteredData,"Filter Data");
-        console.log(filterType, durationRange, durationOption);
-        console.log(filteredData);
-        // console.log(filteredData);
+        console.log(filterType);
         if (filterType === "In") {
-            console.log(filteredData);
-            filteredData = filteredData.filter((data) => data.type === "In");
-            console.log(filteredData);
+            // console.log(filteredData, "1");
+            filteredData = filteredData.filter((data) => data.type_in === "In");
+            console.log(filteredData, "2");
         } else if (filterType === "Out") {
             console.log(filteredData);
-            filteredData = filteredData.filter((data) => data.type === "Out");
+            filteredData = filteredData.filter((data) => data.type_in === "Out");
             console.log(filteredData);
         }
+
+
         if (durationOption === "Longest") {
             filteredData.sort((a, b) => {
                 const durationA = parseDuration(a.duration);
@@ -79,16 +88,6 @@ function ShowDetails() {
         // for example 2*3600 + 2*60 + 13 = 7200+120+13=  7323
         return hours * 3600 + minutes * 60 + seconds;
     };
-
-    const handleFilterChange = (e) => {
-        const selectedType = e.target.value;
-        console.log(selectedFilter);
-        // Update the selected filter type state
-        setSelectedFilter(selectedType);
-        console.log(selectedFilter);
-        applyFilter(selectedType, "", "");
-    };
-
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,7 +128,7 @@ function ShowDetails() {
 
             setSearchCriteriaUsed(criteriaUsed);
             // Only make the request if there are search criteria
-            axios.get("http://192.168.29.172:4000/search", {
+            axios.get("http://localhost:4000/search", {
                 params: updatedSearchCriteria,
             }).then((res) => {
                 setFetchData(res.data);
@@ -164,10 +163,14 @@ function ShowDetails() {
         });
 
         setFetchData([]);
+        setSearchData([]);
         setSelectedRecording(null); // Reset the selected recording for listening
         setSelectedTranscriptRecording(null); // Reset the selected transcript recording
         setTranscript("");
         setSearchCriteriaUsed(false)
+        setSelectedDurationLongShort(null); // Clear the selected duration option
+        setRange([0, 100]); // Reset the range slider
+        setSelectIncOutCall(""); // Clear the selected filter
     };
 
     const ListenRecording = (id) => {
@@ -178,9 +181,10 @@ function ShowDetails() {
             // Clear the transcript if it's not for the same recording
             setTranscript("");
         }
-        axios.get(`http://192.168.29.172:4000/audio/${id}`, { responseType: 'arraybuffer' })
+        axios.get(`http://localhost:4000/audio/${id}`, { responseType: 'arraybuffer' })
             .then((res) => {
                 const blob = new Blob([res.data]);
+                console.log(blob);
                 const audioUrl = URL.createObjectURL(blob);
                 setSelectedRecording(audioUrl);
             })
@@ -192,7 +196,7 @@ function ShowDetails() {
 
     const GetTranscript = (id) => {
         if (selectedListenRecording === id) {
-            axios.get(`http://192.168.29.172:4000/transcript/${id}`)
+            axios.get(`http://localhost:4000/transcript/${id}`)
                 .then((res) => {
                     setTranscript(res.data.transcript);
                     setSelectedTranscriptRecording(id);
@@ -205,7 +209,6 @@ function ShowDetails() {
             setTranscript("");
         }
     };
-
     return (
         <div className="pt-1" id='showDetails'>
             <div className="row m-0" >
@@ -221,7 +224,7 @@ function ShowDetails() {
                                     id="flexRadioDefault1"
                                     value="Longest"
                                     onChange={handleDurationOptionChange}
-                                    checked={selectedDurationOption === "Longest"}
+                                    checked={selectedDurationLongShort === "Longest"}
                                 />
                                 <label class="form-check-label" for="flexRadioDefault1">Longest</label>
                             </div>
@@ -232,7 +235,7 @@ function ShowDetails() {
                                     id="flexRadioDefault2"
                                     value="Shortest"
                                     onChange={handleDurationOptionChange}
-                                    checked={selectedDurationOption === "Shortest"}
+                                    checked={selectedDurationLongShort === "Shortest"}
                                 />
                                 <label class="form-check-label" for="flexRadioDefault2">Shortest</label>
                             </div>
@@ -251,7 +254,7 @@ function ShowDetails() {
                         <p className="">Selected Duration Range: {range[0]} minutes - {range[1]} minutes</p>
 
                         <label htmlFor="" className='fs-5'>Select Type</label>
-                        <select className="w-100" onChange={handleFilterChange} value={selectedFilter} aria-label="Default select example">
+                        <select className="w-100" onChange={handleFilterChange} value={selectIncOutCall} aria-label="Default select example">
                             <option value="">ALL</option> {/* Default: no filter */}
                             <option value="In">INC</option>
                             <option value="Out">OUT</option>
@@ -273,7 +276,7 @@ function ShowDetails() {
                     </div>
 
                     <div className="row">
-                        <div className="col-md-12 ">
+                        <div className="col-md-12 overflow-table">
                             <div className="col-md-12 mb-3" id="boxStyling" style={{ border: '1px solid #a7a7a7', padding: '10px' }}>
                                 {fetchData.length === 0 && searchCriteriaUsed ? (
                                     <div className="text-center">
@@ -292,23 +295,23 @@ function ShowDetails() {
                                                     <th scope='col text-center'>Agent</th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="overflow-table">
+                                            <tbody className="">
                                                 {fetchData.map((data, index) => (
-                                                    <tr key={data.id}>
+                                                    <tr key={data.recording_Id}>
                                                         <td className='data1' key={index}>
-                                                            <Link to="#" onClick={() => ListenRecording(data.id)} className="text-primary">
+                                                            <Link to="#" onClick={() => ListenRecording(data.recording_Id)} className="text-primary">
                                                                 Listen
                                                             </Link>
                                                             ||
-                                                            <Link to="#" onClick={() => GetTranscript(data.id)} className="text-primary">
+                                                            <Link to="#" onClick={() => GetTranscript(data.recording_Id)} className="text-primary">
                                                                 Transcript
                                                             </Link>
                                                         </td>
-                                                        <td className="text-center data1">{data.type}</td>
+                                                        <td className="text-center data1">{data.type_in}</td>
                                                         <td className="text-center data1">{data.duration}</td>
                                                         <td className="text-center data1">{data.date}</td>
-                                                        <td className="text-center data1">{data.queue}</td>
-                                                        <td className="text-center data1">{data.agent}</td>
+                                                        <td className="text-center data1">{data.queue_name}</td>
+                                                        <td className="text-center data1">{data.agent_name}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -331,19 +334,25 @@ function ShowDetails() {
 
                                     <div className="col-md-7 col-lg-7">
                                         <div className="transcript Audio_transcript" style={{ overflowY: 'auto', maxHeight: selectedTranscriptRecording ? '150px' : 'auto', padding: "5px 10px" }}>
-                                            <span data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop" className='fullwidthIcons'><BsArrowsFullscreen /></span>
+                                            <span data-bs-toggle="modal" data-bs-target="#exampleModal" className='fullwidthIcons'><BsArrowsFullscreen /></span>
                                             <span className='fs-5' style={{ paddingLeft: "40%" }}>Transcript</span>
                                             <br />
 
-                                            <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel">
-                                                <div class="offcanvas-header">
-                                                    <h5 className="offcanvas-title text-center" id="offcanvasTopLabel">Transcript</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                                                </div>
-                                                <div class="offcanvas-body">
-                                                    {transcript}
+
+                                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5 text-center" id="exampleModalLabel">Transcript</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            {transcript}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
+
                                             {transcript}
                                         </div>
                                     </div>
