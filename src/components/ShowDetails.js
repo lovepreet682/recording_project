@@ -128,7 +128,7 @@ function ShowDetails() {
 
             setSearchCriteriaUsed(criteriaUsed);
             // Only make the request if there are search criteria
-            axios.get("http://localhost:4000/search", {
+            axios.get("http://13.233.34.0:4000/search", {
                 params: updatedSearchCriteria,
             }).then((res) => {
                 setFetchData(res.data);
@@ -181,7 +181,7 @@ function ShowDetails() {
             // Clear the transcript if it's not for the same recording
             setTranscript("");
         }
-        axios.get(`http://localhost:4000/audio/${id}`, { responseType: 'arraybuffer' })
+        axios.get(`http://13.233.34.0:4000/audio/${id}`, { responseType: 'arraybuffer' })
             .then((res) => {
                 const blob = new Blob([res.data]);
                 console.log(blob);
@@ -196,7 +196,7 @@ function ShowDetails() {
 
     const GetTranscript = (id) => {
         if (selectedListenRecording === id) {
-            axios.get(`http://localhost:4000/transcript/${id}`)
+            axios.get(`http://13.233.34.0:4000/transcript/${id}`)
                 .then((res) => {
                     setTranscript(res.data.transcript);
                     setSelectedTranscriptRecording(id);
