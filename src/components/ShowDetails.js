@@ -14,6 +14,8 @@ function ShowDetails() {
     const [selectedTranscriptRecording, setSelectedTranscriptRecording] = useState(null); // Selected recording for viewing transcript
     const [transcript, setTranscript] = useState("");
     const [searchCriteriaUsed, setSearchCriteriaUsed] = useState(false);
+    const [sentiment, setSentiment] = useState('');
+    const [sentimentValue, setSentimentValue]=useState("");
 
     //Duration Range
     const [range, setRange] = React.useState([0, 100]); // Initial range [min, max]
@@ -41,30 +43,48 @@ function ShowDetails() {
 
     const handleFilterChange = (e) => {
         const selectedType = e.target.value;
+        
         console.log(selectedType);
         // Update the selected filter type state
         setSelectIncOutCall(selectedType);
+        
         // console.log(setSelectIncOutCall(selectedType));
-        applyFilter(selectedType, "", "")
+        applyFilter(selectedType, "", "", "")
 
     };
 
+    const handleSentiment=(e)=>{
+        const selectSentiment = e.target.value;
+        setSentiment(selectSentiment);
+        applyFilter("", "", "",selectSentiment)
+    }
+
     // console.log(selectIncOutCall);
-    const applyFilter = (filterType, durationRange, durationOption) => {
+    const applyFilter = (filterType, durationRange, durationOption,selectSentiment) => {
         // Filter the search data based on the selected filter type
         let filteredData = searchData;
-        console.log(filterType);
+        let sentimentData=searchData;
+        console.log(selectSentiment);
+
         if (filterType === "In") {
             // console.log(filteredData, "1");
             filteredData = filteredData.filter((data) => data.type_in === "In");
-            console.log(filteredData, "2");
         } else if (filterType === "Out") {
             console.log(filteredData);
             filteredData = filteredData.filter((data) => data.type_in === "Out");
             console.log(filteredData);
+        } 
+
+        if(selectSentiment==="positive"){
+            filteredData = filteredData.filter((data) => data.sentiment_analysis === "positive")
+        }else if(selectSentiment==="negative"){
+            filteredData = filteredData.filter((data) => data.sentiment_analysis === "negative")
+        }else if(selectSentiment==="neutral"){
+            filteredData = filteredData.filter((data) => data.sentiment_analysis === "neutral")
         }
 
-
+        console.log(filteredData);
+       
         if (durationOption === "Longest") {
             filteredData.sort((a, b) => {
                 const durationA = parseDuration(a.duration);
@@ -167,6 +187,7 @@ function ShowDetails() {
         setSelectedRecording(null); // Reset the selected recording for listening
         setSelectedTranscriptRecording(null); // Reset the selected transcript recording
         setTranscript("");
+        setSentiment("")
         setSearchCriteriaUsed(false)
         setSelectedDurationLongShort(null); // Clear the selected duration option
         setRange([0, 100]); // Reset the range slider
@@ -209,6 +230,20 @@ function ShowDetails() {
             setTranscript("");
         }
     };
+
+    const getSeummary = (id) => {
+        console.log(id);
+        axios.get(`http://localhost:4000/summary/${id}`).then((res)=>{
+            setSentimentValue(res.data);
+        })
+    }
+
+    // 
+    const formatDateString = (isoDateString) => {
+        const parsedDate = new Date(isoDateString);
+        const formattedDate = `${parsedDate.getDate()}-${parsedDate.getMonth() + 1}-${parsedDate.getFullYear()}`;
+        return formattedDate;
+      };
     return (
         <div className="pt-1" id='showDetails'>
             <div className="row m-0" >
@@ -259,6 +294,15 @@ function ShowDetails() {
                             <option value="In">INC</option>
                             <option value="Out">OUT</option>
                         </select>
+
+
+                        <label htmlFor="" className='fs-5 mt-3'>Select Sentiment </label>
+                        <select className="w-100" onChange={handleSentiment} value={sentiment} aria-label="Default select example">
+                            <option value="">ALL</option>
+                            <option value="positive">POSTIIVE</option>
+                            <option value="negative">NEGATIVE</option>
+                            <option value="neutral">NEUTRAL</option>
+                        </select>
                     </div>
 
 
@@ -288,6 +332,7 @@ function ShowDetails() {
                                             <thead>
                                                 <tr className=''>
                                                     <th scope="col">Recording</th>
+                                                    <th scope="col">Sentiment</th>
                                                     <th scope="col text-center">Type</th>
                                                     <th scope="col text-center">Duration</th>
                                                     <th scope="col text-center">Date</th>
@@ -306,10 +351,16 @@ function ShowDetails() {
                                                             <Link to="#" onClick={() => GetTranscript(data.recording_Id)} className="text-primary">
                                                                 Transcript
                                                             </Link>
+                                                            ||
+                                                            <Link to="#" onClick={() => getSeummary(data.recording_Id)}  data-bs-toggle="modal" data-bs-target="#sentimentValue" className="text-primary">
+                                                                Summary
+                                                            </Link>
                                                         </td>
+
+                                                        <td className="text-center data1">{data.sentiment_analysis}</td>
                                                         <td className="text-center data1">{data.type_in}</td>
                                                         <td className="text-center data1">{data.duration}</td>
-                                                        <td className="text-center data1">{data.date}</td>
+                                                        <td className="text-center data1">{formatDateString(data.recording_date)}</td>
                                                         <td className="text-center data1">{data.queue_name}</td>
                                                         <td className="text-center data1">{data.agent_name}</td>
                                                     </tr>
@@ -362,6 +413,23 @@ function ShowDetails() {
 
 
                         </div>
+                    </div>
+                </div>
+            </div>
+
+
+            {/* Show the summary data */}
+            <div class="modal fade" id="sentimentValue" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Summary</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            {sentimentValue}
+                        </div>
+                        
                     </div>
                 </div>
             </div>
