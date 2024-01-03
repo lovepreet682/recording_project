@@ -28,7 +28,9 @@ function ShowDetails() {
         setModalVisible(false);
         setWordSearch('');
         setSearchCriteria({
-            name:""
+            name: "",
+            todate: "",
+            fromdate: ""
         })
     }
 
@@ -156,9 +158,11 @@ function ShowDetails() {
         if (wordSearch.trim() !== '' && searchCriteria.name.trim() !== '') {
             const fetchData = async () => {
                 try {
-                    const response = await axios.post('http://13.235.48.109:5000/fetch_records', {
+                    const response = await axios.post('http://15.207.55.127:5000/fetch_records', {
                         agent_name: searchCriteria.name,
-                        word_search: wordSearch
+                        word_search: wordSearch,
+                        from_date: searchCriteria.fromdate || null,
+                        to_date: searchCriteria.todate || null
                     });
                     setModalData(response.data)
                     // console.log(response.data.Records.Records[0]);
@@ -233,7 +237,7 @@ function ShowDetails() {
             setErrorQuerySearch('');
             setQuerySearchModal(true);
             setLoadingQueryData(true)
-            const queryResponse = await axios.post('http://13.235.48.109:5000/query', { question: querySearch });
+            const queryResponse = await axios.post('http://15.207.55.127:5000/query', { question: querySearch });
 
             // Set state and log result within the try block
 
@@ -329,7 +333,7 @@ function ShowDetails() {
         const parts = transcription.split(myword);
 
         return parts.map((part, index) => (
-            myword.test(part) ? <span key={index} style={{ color: 'green', background:"yellow", padding:'0px', margin:"0px" }}>{part}</span> : part
+            myword.test(part) ? <span key={index} style={{ color: 'green', background: "yellow", padding: '0px', margin: "0px" }}>{part}</span> : part
         ));
     };
 
@@ -550,9 +554,9 @@ function ShowDetails() {
                     </Modal.Header>
                     <Modal.Body>
                         {loadingQueryData ? (
-                           <div className='text-center'>
-                             <img src='../img/loading.gif' style={{width:"50px", marginTop:"10px"}} alt="" />
-                           </div>
+                            <div className='text-center'>
+                                <img src='../img/loading.gif' style={{ width: "50px", marginTop: "10px" }} alt="" />
+                            </div>
 
                         ) : (
                             <>
