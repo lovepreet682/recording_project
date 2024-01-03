@@ -175,20 +175,6 @@ function ShowDetails() {
             // Call the fetchData function
             fetchData();
 
-<<<<<<< HEAD
-            setSearchCriteriaUsed(criteriaUsed);
-            // Only make the request if there are search criteria
-            axios.get("http://13.233.34.0:4000/search", {
-                params: updatedSearchCriteria,
-            }).then((res) => {
-                setFetchData(res.data);
-                setSearchData(res.data);
-                console.log(res.data);
-            }).catch((error) => {
-                console.log(error);
-            });
-=======
->>>>>>> d6443cf4660aef6e3d643247f4923d5c82ea5b81
         } else {
             // Check if any of the search criteria fields have values
             if (
