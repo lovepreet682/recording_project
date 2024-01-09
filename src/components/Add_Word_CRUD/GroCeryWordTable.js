@@ -138,7 +138,7 @@ function GroCeryWordTable({ loading}) {
                     <Modal.Header closeButton>
                         <Modal.Title>Delete Data</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body className='' style={{ fontSize: "16px" }}>You want to Suspicious Data </Modal.Body>
+                    <Modal.Body className='' style={{ fontSize: "16px" }}>You want to Delete Suspicious Data </Modal.Body>
                     <Modal.Footer className='d-flex justify-content-center'>
                         <Button id='UserModuleBtn' onClick={handleDataDelete}>
                             Delete
