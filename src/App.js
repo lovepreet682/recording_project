@@ -18,7 +18,7 @@ function App() {
         <Route path='/' element={<Login />} />
         <Route path='/navbar/' element={<Tab_navbar />} >
           <Route path='home' element={<Homepage />} />
-          <Route path='grocery' element={<GroceryWord/>}/>
+          <Route path='glossary' element={<GroceryWord/>}/>
           <Route path='setting' element={<SettingPage />} />
           <Route path='network/' element={<Recording />} >
           </Route>

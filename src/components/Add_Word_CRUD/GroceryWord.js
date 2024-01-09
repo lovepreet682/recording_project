@@ -66,7 +66,8 @@ function GroceryWord() {
 
   const handleGroceryWord = (e) => {
     const { value } = e.target;
-    setGroceryWord(value)
+    const upperCase=value.toUpperCase();
+    setGroceryWord(upperCase)
   }
   return (
     <>
