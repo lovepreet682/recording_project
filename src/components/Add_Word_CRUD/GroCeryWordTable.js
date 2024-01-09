@@ -155,7 +155,7 @@ function GroCeryWordTable({ loading}) {
                 <Modal.Body>
                     <div>
                         <label htmlFor="" style={{ fontWeight: "500" }}>Update Suspicious Word</label>
-                        <input type="text" value={editGroceryWord} onChange={(e) => { setEditGroceryWord(e.target.value) }} style={{ border: '1px solid black' }} className='form-control' required />
+                        <input type="text" value={editGroceryWord} onChange={(e) => { setEditGroceryWord(e.target.value.toUpperCase()) }} style={{ border: '1px solid black' }} className='form-control' required />
                     </div>
                 </Modal.Body>
                 <Modal.Footer className='d-flex justify-content-center'>
