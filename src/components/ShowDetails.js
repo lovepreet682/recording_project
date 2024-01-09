@@ -442,6 +442,7 @@ function ShowDetails() {
                                         <table className="table table-striped text-center" style={{ borderRadius: '10px' }}>
                                             <thead>
                                                 <tr className=''>
+                                                <th scope="col">Call Id</th>
                                                     <th scope="col">Recording</th>
                                                     <th scope="col">Sentiment</th>
                                                     <th scope="col text-center">Type</th>
@@ -451,9 +452,10 @@ function ShowDetails() {
                                                     <th scope='col text-center'>Agent</th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="">
+                                            <tbody className="mytable">
                                                 {fetchData.map((data, index) => (
                                                     <tr key={data.recording_Id}>
+                                                        <td className="text-center data1">{data.call_id}</td>
                                                         <td className='data1' key={index}>
                                                             <Link to="#" onClick={() => ListenRecording(data.recording_Id)} className="text-primary">
                                                                 Listen

@@ -7,6 +7,7 @@ import Homepage from './components/Homepage';
 import Recording from './components/Recording';
 import SettingPage from './components/SettingPage';
 import ShowDetails from './components/ShowDetails';
+import GroceryWord from './components/Add_Word_CRUD/GroceryWord';
 
 
 
@@ -17,12 +18,13 @@ function App() {
         <Route path='/' element={<Login />} />
         <Route path='/navbar/' element={<Tab_navbar />} >
           <Route path='home' element={<Homepage />} />
+          <Route path='grocery' element={<GroceryWord/>}/>
           <Route path='setting' element={<SettingPage />} />
           <Route path='network/' element={<Recording />} >
-          
           </Route>
           
           <Route path='showDetails' element={<ShowDetails />} />
+          
 
         </Route>
       </Routes >
