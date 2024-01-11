@@ -202,7 +202,7 @@ function ShowDetails() {
 
                 setSearchCriteriaUsed(criteriaUsed);
                 // Only make the request if there are search criteria
-                axios.get("http://localhost:4000/search", {
+                axios.get("http://13.233.34.0:4000/search", {
                     params: updatedSearchCriteria,
                 }).then((res) => {
                     setFetchData(res.data);

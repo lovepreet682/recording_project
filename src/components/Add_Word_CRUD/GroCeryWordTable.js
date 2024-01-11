@@ -19,7 +19,7 @@ function GroCeryWordTable({ loading}) {
 
     // get Table
     useEffect(() => {
-        axios.get('http://localhost:4000/groceryWord')
+        axios.get('http://13.233.34.0:4000/groceryWord')
             .then((res) => {
                 const response = res.data;
                 setSuspiciousWord(response);
@@ -37,7 +37,7 @@ function GroCeryWordTable({ loading}) {
     // Delete Data
     const handleDataDelete = () => {
         setShow(true)
-        axios.delete(`http://localhost:4000/groceryWord/${suspiciousId}`).then((res) => {
+        axios.delete(`http://13.233.34.0:4000/groceryWord/${suspiciousId}`).then((res) => {
             const deleteResponse = res.data;
             setSuspiciousWord(deleteResponse);
             toast.success(deleteResponse.message, {
@@ -70,7 +70,7 @@ function GroCeryWordTable({ loading}) {
 
     const handleEditButton = async () => {
         try {
-            const response = await axios.put(`http://localhost:4000/groceryWord/${suspiciousUpdateId}`, { grocery_word: editGroceryWord });
+            const response = await axios.put(`http://13.233.34.0:4000/groceryWord/${suspiciousUpdateId}`, { grocery_word: editGroceryWord });
             setSuspiciousWord(response.data);
             setSuspiciousUpdateModal(false)
             setRefreshTableDelete(!RefreshTableDelete)
