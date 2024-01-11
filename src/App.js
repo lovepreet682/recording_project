@@ -8,6 +8,7 @@ import Recording from './components/Recording';
 import SettingPage from './components/SettingPage';
 import ShowDetails from './components/ShowDetails';
 import GroceryWord from './components/Add_Word_CRUD/GroceryWord';
+import ReportTable from './components/NotificationTask/ReportTable';
 
 
 
@@ -19,6 +20,7 @@ function App() {
         <Route path='/navbar/' element={<Tab_navbar />} >
           <Route path='home' element={<Homepage />} />
           <Route path='glossary' element={<GroceryWord/>}/>
+          <Route path='report' element={<ReportTable/>}/>
           <Route path='setting' element={<SettingPage />} />
           <Route path='network/' element={<Recording />} >
           </Route>

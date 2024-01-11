@@ -6,7 +6,8 @@ import { GiNetworkBars } from 'react-icons/gi';
 import { FiSettings } from 'react-icons/fi';
 import { BsLink45Deg } from 'react-icons/bs';
 import { BiSolidDownload, BiUserCircle } from 'react-icons/bi';
-import {IoBookOutline} from 'react-icons/io5'
+import {IoBookOutline} from 'react-icons/io5';
+import { TbReportAnalytics } from "react-icons/tb";
 
 function Tab_navbar() {
 
@@ -18,6 +19,7 @@ function Tab_navbar() {
                         <ul className='list-unstyled' id='iconsbar'>
                             <li className='text-center'><NavLink to="home" className='fs-2'> <AiOutlineHome /></NavLink></li>
                             <li className='text-center'><NavLink to="glossary" className='fs-2'> <IoBookOutline /></NavLink></li>
+                            <li className='text-center'><NavLink to="report" className='fs-2'> <TbReportAnalytics /></NavLink></li>
                             <li className='text-center'><NavLink to="network" className='fs-2'><GiNetworkBars /></NavLink></li>
                             <li className='text-center'><NavLink to="setting" className='fs-2'><FiSettings /></NavLink></li>
                             <li className='text-center'><NavLink to="down" className='fs-2'><BsLink45Deg /></NavLink></li>

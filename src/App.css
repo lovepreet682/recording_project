@@ -190,6 +190,12 @@ ul li a {
   color: white;
 }
 
+/* notification */
+#notification{
+  height: 100vh;
+  background-color: var(--ShowDetailsbgColor1);
+}
+
 /* loginForm */
 @media (max-width: 850px) {
   #loginForm {

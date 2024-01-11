@@ -13,7 +13,7 @@ function GroceryWord() {
 
   // Fetch data length from the server
   useEffect(() => {
-    axios.get('http://13.233.34.0:4000/groceryWord')
+    axios.get('http://localhost:4000/groceryWord')
       .then((res) => {
         const response = res.data;
         setLengthData(response.length);
@@ -29,7 +29,7 @@ function GroceryWord() {
     console.log("Submitting...........");
 
     try {
-      await axios.post('http://13.233.34.0:4000/groceryWord', { grocery_word: groceryWord }).then((res) => {
+      await axios.post('http://localhost:4000/groceryWord', { grocery_word: groceryWord }).then((res) => {
         const response = res.data;
         setGroceryWord(response);
         setLengthData(dataLength + 1);
