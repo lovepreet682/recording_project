@@ -37,16 +37,22 @@ function ReportTable() {
         const minutes = parsedDate.getMinutes();
         const seconds = parsedDate.getSeconds();
 
-
         const formattedHours = ('0' + hours).slice(-2);
         const formattedMinutes = ('0' + minutes).slice(-2);
         const formattedSeconds = ('0' + seconds).slice(-2);
 
-
         const formattedDate = `${day}-${month}-${year} ${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
-
         return formattedDate;
     };
+
+    // format Date in the Modal 
+    const modalDateFormat = (myStringDate) => {
+        const parsedDate = new Date(myStringDate);
+
+        const formatDate = `${parsedDate.getDate()}-${parsedDate.getMonth()}-${parsedDate.getFullYear()}`
+        return formatDate;
+
+    }
 
     // Handle Reset
     const handleReset = () => {
@@ -99,8 +105,12 @@ function ReportTable() {
             axios.get(`http://localhost:4000/users/${getID}`)
                 .then((res) => {
                     const response = res.data;
-                    console.log(response);
-                    setModalTable(response);
+                    console.log('Response:', response);
+                    if (typeof response === 'object' && !Array.isArray(response)) {
+                        setModalTable([response]);
+                    } else {
+                        console.error('Invalid response format:', response);
+                    }
                 })
                 .catch((error) => {
                     console.error('Error fetching data:', error);
@@ -174,40 +184,36 @@ function ReportTable() {
                 {/* Modal Update */}
                 <Modal show={show} onHide={handleClose} className='' dialogClassName="modal-lg">
                     <Modal.Header closeButton>
-                        <Modal.Title>User Details </Modal.Title>
+                        <Modal.Title className='text-center'>User Details</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <table className="table table-striped text-center" style={{ borderRadius: '10px' }}>
+                        <table className="table table-striped text-center" style={{ borderRadius: '10px', width: '100%' }}>
                             <thead>
                                 <tr className=''>
-                                    <th scope="col">Call Id</th>
-                                    <th scope="col">Recording</th>
-                                    <th scope="col">Sentiment</th>
-                                    <th scope="col text-center">Type</th>
-                                    <th scope="col text-center">Duration</th>
-                                    <th scope="col text-center">Date</th>
-                                    <th scope="col text-center">Queue</th>
-                                    <th scope='col text-center'>Agent</th>
+                                    <th scope="col" style={{ border: '1px solid black' }}>Call Id</th>
+                                    <th scope="col" style={{ border: '1px solid black' }}>Sentiment</th>
+                                    <th scope="col" style={{ border: '1px solid black' }}>Type</th>
+                                    <th scope="col" style={{ border: '1px solid black' }}>Duration</th>
+                                    <th scope="col" style={{ border: '1px solid black' }}>Date</th>
+                                    <th scope="col" style={{ border: '1px solid black' }}>Queue</th>
+                                    <th scope='col' style={{ border: '1px solid black' }}>Agent</th>
+                                    <th scope='col' style={{ border: '1px solid black' }}>Transcription</th>
                                 </tr>
                             </thead>
-                            {console.log('Hello')}
-                            {console.log(modalTable)}
                             {modalTable.length > 0 ? (
-                                console.log('bye'),
                                 <>
-                                    {Array.isArray(modalTable) && modalTable.map((data, index) => (
-                                        console.log('Rendering data:', data),
-                                        <tr key={index}>
-                                            <td className="text-center data1">{data.call_id}</td>
-                                            <td className="text-center data1">{data.sentiment_analysis}</td>
-                                            <td className="text-center data1">{data.type_in}</td>
-                                            <td className="text-center data1">{data.duration}</td>
-                                            {/* <td className="text-center data1">{formatDateString(data.recording_date)}</td> */}
-                                            <td className="text-center data1">{data.queue_name}</td>
-                                            <td className="text-center data1">{data.agent_name}</td>
+                                    {modalTable.map((data, index) => (
+                                        <tr key={index} >
+                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.call_id}</td>
+                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.sentiment_analysis}</td>
+                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.type_in}</td>
+                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.duration}</td>
+                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{modalDateFormat(data.recording_date)}</td>
+                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.queue_name}</td>
+                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.agent_name}</td>
+                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.transcription}</td>
                                         </tr>
-                                    ))
-                                    }
+                                    ))}
                                 </>
                             ) : (
                                 <div>
