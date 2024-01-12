@@ -197,7 +197,7 @@ ul li a {
 }
 .modal-lg {
   max-width: 100%;
-  margin: 0;
+  margin: 10px;
 }
 /* loginForm */
 @media (max-width: 850px) {
