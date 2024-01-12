@@ -14,7 +14,7 @@ function ReportTable() {
     const [getID, setGetID] = useState('')
 
     useEffect(() => {
-        axios.get('http://localhost:4000/notification')
+        axios.get('http://13.233.34.0:4000/notification')
             .then((res) => {
                 const response = res.data;
                 setNotificationTable(response);
@@ -102,7 +102,7 @@ function ReportTable() {
 
     useEffect(() => {
         if (getID !== null) {
-            axios.get(`http://localhost:4000/users/${getID}`)
+            axios.get(`http://13.233.34.0:4000/users/${getID}`)
                 .then((res) => {
                     const response = res.data;
                     console.log('Response:', response);
