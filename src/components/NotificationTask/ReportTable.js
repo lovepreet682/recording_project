@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { IoEyeSharp } from "react-icons/io5";
 import Modal from 'react-bootstrap/Modal';
-
+import DownloadFiles from '../DownloadReport/DownloadFiles';
 
 function ReportTable() {
     const [notificationTable, setNotificationTable] = useState([]);
@@ -11,10 +11,12 @@ function ReportTable() {
     const [filteredTable, setFilteredTable] = useState([]);
     const [show, setShow] = useState(false);
     const [modalTable, setModalTable] = useState([]);
-    const [getID, setGetID] = useState('')
+    const [getID, setGetID] = useState('');
+    const [notificationTableValue, setNotificationTableValue] = useState('');
+
 
     useEffect(() => {
-        axios.get('http://13.233.34.0:4000/notification')
+        axios.get('http://13.233.34.0:4000/notificationTable')
             .then((res) => {
                 const response = res.data;
                 setNotificationTable(response);
@@ -61,31 +63,45 @@ function ReportTable() {
         setFilteredTable(notificationTable);
     }
 
+    // Format Date
+    const formatDate = (dateString) => {
+        if (!dateString) return ""; // Return an empty string if dateString is falsy
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = String(date.getFullYear());
+        return `${year}-${month}-${day}`;
+    };
+
     // handleSubmit
     const handleSubmit = () => {
-        // Now im converting input strings to Date objects
-        const fromDateObj = new Date(fromDate);
-        console.log(fromDateObj);
-        const toDateObj = new Date(toDate);
-        const filteredData = notificationTable.filter((item) => {
-            const itemDate = new Date(item.datetime);
+        if (fromDate || toDate) {
+            const formattedFromDate = formatDate(fromDate);
+            const formattedToDate = formatDate(toDate);
+            console.log(formattedFromDate, formattedToDate);
 
-            // Check if fromDate is a valid date
-            if (!isNaN(fromDateObj)) {
-                // Check date range if toDate is a valid date
-                if (!isNaN(toDateObj)) {
-                    return itemDate >= fromDateObj && itemDate <= toDateObj;
-                } else {
-                    // Only check start date if toDate is not valid
-                    return itemDate >= fromDateObj;
-                }
-            }
-            // If fromDate is not a valid date, include all items
-            return true;
-        });
+            const updatedSearchCriteria = {
+                "fromdate": formattedFromDate,
+                "todate": formattedToDate,
+            };
+            console.log(updatedSearchCriteria);
 
-        // Update the table with the filtered data
-        setFilteredTable(filteredData);
+            const criteriaUsed = Object.values(updatedSearchCriteria).some((value) =>
+                Boolean(value)
+            );
+            // Update the flag based on whether criteria have been used
+            setNotificationTableValue(criteriaUsed);
+            // console.log(notificationTable);
+
+            axios.get("http://13.233.34.0:4000/notification", {
+                params: updatedSearchCriteria,
+            }).then((res) => {
+                setFilteredTable(res.data);
+                console.log(res.data);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
     };
 
     // handleClose
@@ -125,6 +141,7 @@ function ReportTable() {
                 <h4 className='text-center pt-2'>Notification Reports </h4>
                 <div className="container pt-2" id=''>
                     <div className="row d-flex justify-content-center mb-1">
+                        From
                         <div className="col-md-4">
                             <input type="date" className='form-control' value={fromDate} onChange={(e) => {
                                 setFromDate(e.target.value); console.log(e.target.value);
@@ -136,49 +153,57 @@ function ReportTable() {
                                 setToDate(e.target.value); console.log(e.target.value);
                             }} />
                         </div>
-                        <div className='col-md-3'>
-                            <button className='btn btn-primary mx-1' onClick={handleSubmit}>Submit</button>
-                            <button className='btn btn-danger' onClick={handleReset}>Reset</button>
+                        <div className='col-md-3 d-flex '>
+                            <button className='btn btn-primary mx-1' onClick={handleSubmit}>SUBMIT</button>
+                            <button className='btn btn-danger' onClick={handleReset}>RESET</button>
+                            <span className='' style={{ marginLeft: "7px" }}>
+                                <DownloadFiles filteredTable={filteredTable} />
+                            </span>
+
+
+
                         </div>
                     </div>
-                    <table class="table text-center table-striped">
-                        <thead>
-                            <tr className='theading'>
-                                <th scope="col">Sr No.</th>
-                                <th scope="col">Txn Id</th>
-                                <th scope="col">No Of Records</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Call Id</th>
-                                <th scope="col">Notification Id</th>
-                                <th scope="col">View</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredTable.length > 0 ? (
-                                <>
-                                    {filteredTable.map((item, index) => (
-                                        <tr key={index}>
-                                            <td>{index + 1}</td>
-                                            <td >TXN-{item.tax_id}</td>
-                                            <td >{item.no_of_records}</td>
-                                            <td >{formatDateString(item.datetime)}</td>
-                                            <td >{item.call_id}</td>
-                                            <td >{item.sentemai}</td>
-                                            <td>
-                                                <div>
-                                                    <IoEyeSharp className='fs-4' onClick={() => handleModalSection(item.call_id)} />
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </>
-                            ) : (
-                                <div className='mt-1 text-center'>
-                                    <h5 className=''>No Data Found</h5>
-                                </div>
-                            )}
-                        </tbody>
-                    </table>
+                    <div style={{overflow:"auto", height:"77vh"}}>
+                        <table class="table text-center table-striped" style={{ overflow: "auto" }}>
+                            <thead>
+                                <tr className='theading' id='reportTable'>
+                                    <th scope="col">Sr No.</th>
+                                    <th scope="col">Txn Id</th>
+                                    <th scope="col">No Of Records</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Call Id</th>
+                                    <th scope="col">Notification Id</th>
+                                    <th scope="col">View</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredTable.length > 0 && notificationTableValue ? (
+                                    <>
+                                        {filteredTable.map((item, index) => (
+                                            <tr key={index}>
+                                                <td>{index + 1}</td>
+                                                <td >TXN-{item.tax_id}</td>
+                                                <td >{item.no_of_records}</td>
+                                                <td >{formatDateString(item.datetime)}</td>
+                                                <td >{item.call_id}</td>
+                                                <td >{item.sentemai}</td>
+                                                <td>
+                                                    <div>
+                                                        <IoEyeSharp className='fs-4' onClick={() => handleModalSection(item.call_id)} />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </>
+                                ) : (
+                                    <div className='mt-1 text-center'>
+                                        <h5 className='text-center'>No Data Found</h5>
+                                    </div>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 {/* Modal Update */}

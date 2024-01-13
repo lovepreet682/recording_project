@@ -66,7 +66,7 @@ function GroceryWord() {
 
   const handleGroceryWord = (e) => {
     const { value } = e.target;
-    const upperCase=value.toUpperCase();
+    const upperCase = value.toUpperCase();
     setGroceryWord(upperCase)
   }
   return (
@@ -75,7 +75,7 @@ function GroceryWord() {
       <div id="groceryWord">
         <form onSubmit={handleSubmitGroceryWord}>
           <div className="row">
-            <h4 className='text-center my-3'>Add Word</h4>
+            <h4 className='text-center my-3'>Add Suspicious Word</h4>
             <div className="col-md-6 m-auto">
               <input name='grocery_word' value={groceryWord} onChange={handleGroceryWord} type="text" className='form-control' placeholder='Enter Word' required />
             </div>
@@ -85,7 +85,7 @@ function GroceryWord() {
           </div>
         </form>
 
-        <GroCeryWordTable loading={loading} deleteNumber={deleteNumber}/>
+        <GroCeryWordTable loading={loading} deleteNumber={deleteNumber} />
       </div>
     </>
   )
