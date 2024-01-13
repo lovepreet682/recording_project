@@ -16,7 +16,7 @@ function ReportTable() {
 
 
     useEffect(() => {
-        axios.get('http://13.233.34.0:4000/notificationTable')
+        axios.get('http://localhost:4000/notificationTable')
             .then((res) => {
                 const response = res.data;
                 setNotificationTable(response);
@@ -94,7 +94,7 @@ function ReportTable() {
             setNotificationTableValue(criteriaUsed);
             // console.log(notificationTable);
 
-            axios.get("http://13.233.34.0:4000/notification", {
+            axios.get("http://localhost:4000/notification", {
                 params: updatedSearchCriteria,
             }).then((res) => {
                 setFilteredTable(res.data);
@@ -119,7 +119,7 @@ function ReportTable() {
 
     useEffect(() => {
         if (getID !== null) {
-            axios.get(`http://13.233.34.0:4000/users/${getID}`)
+            axios.get(`http://localhost:4000/users/${getID}`)
                 .then((res) => {
                     const response = res.data;
                     console.log('Response:', response);
@@ -165,7 +165,7 @@ function ReportTable() {
 
                         </div>
                     </div>
-                    <div style={{overflow:"auto", height:"77vh"}}>
+                    <div style={{ overflow: "auto", height: "77vh" }}>
                         <table class="table text-center table-striped" style={{ overflow: "auto" }}>
                             <thead>
                                 <tr className='theading' id='reportTable'>
@@ -184,7 +184,7 @@ function ReportTable() {
                                         {filteredTable.map((item, index) => (
                                             <tr key={index}>
                                                 <td>{index + 1}</td>
-                                                <td >TXN-{item.tax_id}</td>
+                                                <td >TXN-{item.txn_id}</td>
                                                 <td >{item.no_of_records}</td>
                                                 <td >{formatDateString(item.datetime)}</td>
                                                 <td >{item.call_id}</td>
