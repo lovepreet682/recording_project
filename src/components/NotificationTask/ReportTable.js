@@ -20,7 +20,8 @@ function ReportTable() {
             .then((res) => {
                 const response = res.data;
                 setNotificationTable(response);
-                setFilteredTable(response)
+                setFilteredTable(response);
+                console.log(response);
             })
             .catch((error) => {
                 console.error('Error fetching data:', error);
@@ -178,7 +179,7 @@ function ReportTable() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredTable.length > 0 && notificationTableValue ? (
+                                {filteredTable.length != 0 && notificationTableValue ? (
                                     <>
                                         {filteredTable.map((item, index) => (
                                             <tr key={index}>
