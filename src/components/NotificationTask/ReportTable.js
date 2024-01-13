@@ -16,7 +16,7 @@ function ReportTable() {
 
 
     useEffect(() => {
-        axios.get('http://localhost:4000/notificationTable')
+        axios.get('http://13.233.34.0:4000/notificationTable')
             .then((res) => {
                 const response = res.data;
                 setNotificationTable(response);
@@ -94,7 +94,7 @@ function ReportTable() {
             setNotificationTableValue(criteriaUsed);
             // console.log(notificationTable);
 
-            axios.get("http://localhost:4000/notification", {
+            axios.get("http://13.233.34.0:4000/notification", {
                 params: updatedSearchCriteria,
             }).then((res) => {
                 setFilteredTable(res.data);
@@ -119,7 +119,7 @@ function ReportTable() {
 
     useEffect(() => {
         if (getID !== null) {
-            axios.get(`http://localhost:4000/users/${getID}`)
+            axios.get(`http://13.233.34.0:4000/users/${getID}`)
                 .then((res) => {
                     const response = res.data;
                     console.log('Response:', response);
