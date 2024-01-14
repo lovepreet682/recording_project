@@ -12,7 +12,7 @@ function ReportTable() {
     const [show, setShow] = useState(false);
     const [modalTable, setModalTable] = useState([]);
     const [getID, setGetID] = useState('');
-    const [notificationTableValue, setNotificationTableValue] = useState('');
+    const [notificationTableValue, setNotificationTableValue] = useState([]);
 
 
     useEffect(() => {
@@ -179,7 +179,7 @@ function ReportTable() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredTable.length != 0 && notificationTableValue ? (
+                                {filteredTable.length > 0 && notificationTableValue ? (
                                     <>
                                         {filteredTable.map((item, index) => (
                                             <tr key={index}>
