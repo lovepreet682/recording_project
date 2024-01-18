@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { IoEyeSharp } from "react-icons/io5";
 import Modal from 'react-bootstrap/Modal';
 import DownloadFiles from '../DownloadReport/DownloadFiles';
+import GroCeryWordTable from '../Add_Word_CRUD/GroCeryWordTable';
 
 function ReportTable() {
     const [notificationTable, setNotificationTable] = useState([]);
@@ -16,7 +17,7 @@ function ReportTable() {
 
 
     useEffect(() => {
-        axios.get('http://13.233.34.0:4000/notificationTable')
+        axios.get('http://localhost:4000/notificationTable')
             .then((res) => {
                 const response = res.data;
                 setNotificationTable(response);
@@ -94,7 +95,7 @@ function ReportTable() {
             setNotificationTableValue(criteriaUsed);
             // console.log(notificationTable);
 
-            axios.get("http://13.233.34.0:4000/notification", {
+            axios.get("http://localhost:4000/notification", {
                 params: updatedSearchCriteria,
             }).then((res) => {
                 setFilteredTable(res.data);
@@ -114,16 +115,21 @@ function ReportTable() {
     const handleModalSection = (call_id) => {
         setShow(true);
         setGetID(call_id);
-        console.log(call_id);
+        console.log(getID);
     };
 
     useEffect(() => {
         if (getID !== null) {
-            axios.get(`http://13.233.34.0:4000/users/${getID}`)
+            axios.get(`http://localhost:4000/users/${getID}`)
                 .then((res) => {
                     const response = res.data;
-                    console.log('Response:', response);
-                    if (typeof response === 'object' && !Array.isArray(response)) {
+                    console.log('This is my Response:', response);
+    
+                    if (Array.isArray(response)) {
+                        // If the response is an array, set it directly to modalTable
+                        setModalTable(response);
+                    } else if (typeof response === 'object') {
+                        // If the response is an object, wrap it in an array and set modalTable
                         setModalTable([response]);
                     } else {
                         console.error('Invalid response format:', response);
@@ -134,6 +140,7 @@ function ReportTable() {
                 });
         }
     }, [getID]);
+    
 
 
     return (
