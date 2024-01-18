@@ -230,7 +230,7 @@ function ReportTable() {
                                                 <td >{formatDateString(item.datetime)}</td>
                                                 <td >{item.call_id.split(',').map((callId, callIndex) => (
                                                     <React.Fragment key={callIndex}>
-                                                        {callIndex > 0 && <br />} {/* Add a line break after the first ID */}
+                                                        {callIndex > 0 && <br />} 
                                                         {callId}
                                                     </React.Fragment>
                                                 ))}</td>
