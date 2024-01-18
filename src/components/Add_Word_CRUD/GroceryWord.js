@@ -16,6 +16,7 @@ function GroceryWord() {
     axios.get('http://13.233.34.0:4000/groceryWord')
       .then((res) => {
         const response = res.data;
+        console.log(response);
         setLengthData(response.length);
       })
       .catch((error) => {

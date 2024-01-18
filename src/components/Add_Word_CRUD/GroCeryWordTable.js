@@ -57,7 +57,6 @@ function GroCeryWordTable({ loading}) {
     }
 
     // Edit part
-
     const handleCloseEdit = () => {
         setSuspiciousUpdateModal(false)
     }
@@ -87,7 +86,6 @@ function GroCeryWordTable({ loading}) {
         }
     };
 
-
     return (
         <>        
             <div className="container">
@@ -113,7 +111,7 @@ function GroCeryWordTable({ loading}) {
                                                     <span className='operation_icons text-center'>
                                                         <div className='fs-4 mx-3'>
                                                             <FaEdit onClick={() => {
-                                                                handleUpdateGroceryWord(item.suspicios_word_Id, item.grocery_word)
+                                                                handleUpdateGroceryWord(item.suspicios_word_Id, item.grocery_word)                                                                
                                                             }} />
                                                         </div>
                                                     </span>

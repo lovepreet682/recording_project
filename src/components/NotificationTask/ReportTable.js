@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { IoEyeSharp } from "react-icons/io5";
 import Modal from 'react-bootstrap/Modal';
 import DownloadFiles from '../DownloadReport/DownloadFiles';
-import GroCeryWordTable from '../Add_Word_CRUD/GroCeryWordTable';
+// import GroCeryWordTable from '../Add_Word_CRUD/GroCeryWordTable';
 
 function ReportTable() {
     const [notificationTable, setNotificationTable] = useState([]);
@@ -14,10 +14,31 @@ function ReportTable() {
     const [modalTable, setModalTable] = useState([]);
     const [getID, setGetID] = useState('');
     const [notificationTableValue, setNotificationTableValue] = useState([]);
+    const [getSuspiciousWord, setGetSuspiciousWord] = useState([])
+
+    const formatTranscription = (transcription, suspiciousWords) => {
+        const wordsArray = suspiciousWords[0].split(',').map(word => word.trim());
+        const myword = new RegExp(`(${wordsArray.join('|')})`, 'ig');
+        const parts = transcription.split(myword);
+
+        return parts.map((part, index) => (
+            myword.test(part) ? <span key={index} style={{ color: 'red', background: "yellow", padding: '0px', margin: "0px" }}>{part}</span> : part
+        ));
+    };
 
 
     useEffect(() => {
-        axios.get('http://localhost:4000/notificationTable')
+        axios.get('http://13.233.34.0:4000/groceryWord')
+            .then((res) => {
+                const response = res.data;
+                setGetSuspiciousWord(response);
+                console.log(response);
+            })
+            .catch((error) => {
+                console.error('Error fetching data:', error);
+            });
+
+        axios.get('http://13.233.34.0:4000/notificationTable')
             .then((res) => {
                 const response = res.data;
                 setNotificationTable(response);
@@ -27,7 +48,7 @@ function ReportTable() {
             .catch((error) => {
                 console.error('Error fetching data:', error);
             });
-    }, [])
+    }, []);
 
     // format date
     const formatDateString = (isoDateString) => {
@@ -95,7 +116,7 @@ function ReportTable() {
             setNotificationTableValue(criteriaUsed);
             // console.log(notificationTable);
 
-            axios.get("http://localhost:4000/notification", {
+            axios.get("http://13.233.34.0:4000/notification", {
                 params: updatedSearchCriteria,
             }).then((res) => {
                 setFilteredTable(res.data);
@@ -118,13 +139,28 @@ function ReportTable() {
         console.log(getID);
     };
 
+
+
     useEffect(() => {
+        axios.get('http://13.233.34.0:4000/groceryWord')
+            .then((res) => {
+                const response = res.data;
+
+                // Extract the Array 
+                const extractArray = response.map((item) => item.grocery_word)
+                setGetSuspiciousWord(extractArray);
+                console.log(getSuspiciousWord);
+            })
+            .catch((error) => {
+                console.error('Error fetching data:', error);
+            });
+
         if (getID !== null) {
-            axios.get(`http://localhost:4000/users/${getID}`)
+            axios.get(`http://13.233.34.0:4000/users/${getID}`)
                 .then((res) => {
                     const response = res.data;
                     console.log('This is my Response:', response);
-    
+
                     if (Array.isArray(response)) {
                         // If the response is an array, set it directly to modalTable
                         setModalTable(response);
@@ -140,8 +176,6 @@ function ReportTable() {
                 });
         }
     }, [getID]);
-    
-
 
     return (
         <>
@@ -194,11 +228,19 @@ function ReportTable() {
                                                 <td >TXN-{item.txn_id}</td>
                                                 <td >{item.no_of_records}</td>
                                                 <td >{formatDateString(item.datetime)}</td>
-                                                <td >{item.call_id}</td>
+                                                <td >{item.call_id.split(',').map((callId, callIndex) => (
+                                                    <React.Fragment key={callIndex}>
+                                                        {callIndex > 0 && <br />} {/* Add a line break after the first ID */}
+                                                        {callId}
+                                                    </React.Fragment>
+                                                ))}</td>
                                                 <td >{item.sentemai}</td>
                                                 <td>
                                                     <div>
-                                                        <IoEyeSharp className='fs-4' onClick={() => handleModalSection(item.call_id)} />
+                                                        <IoEyeSharp className='fs-4' onClick={() => {
+                                                            handleModalSection(item.call_id);
+
+                                                        }} />
                                                     </div>
                                                 </td>
                                             </tr>
@@ -244,7 +286,9 @@ function ReportTable() {
                                             <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{modalDateFormat(data.recording_date)}</td>
                                             <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.queue_name}</td>
                                             <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.agent_name}</td>
-                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.transcription}</td>
+                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>
+                                                {formatTranscription(data.transcription, getSuspiciousWord)}
+                                            </td>
                                         </tr>
                                     ))}
                                 </>
