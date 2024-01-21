@@ -1,12 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { IoEyeSharp } from "react-icons/io5";
 import Modal from 'react-bootstrap/Modal';
 import DownloadFiles from '../DownloadReport/DownloadFiles';
 import { Link } from 'react-router-dom';
-// import GroCeryWordTable from '../Add_Word_CRUD/GroCeryWordTable';
+import AudioPlayer from 'react-h5-audio-player';
+import { BsArrowsFullscreen } from 'react-icons/bs'
 
-function ReportTable() {
+
+function ModalReportTable() {
     const [notificationTable, setNotificationTable] = useState([]);
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
@@ -16,7 +17,6 @@ function ReportTable() {
     const [getID, setGetID] = useState('');
     const [notificationTableValue, setNotificationTableValue] = useState([]);
     const [getSuspiciousWord, setGetSuspiciousWord] = useState([]);
-    const [taxId, setTaxId] = useState([]);
     const [taxIdShow, setTaxIdShow] = useState(false);
 
     const [sentimentValue, setSentimentValue] = useState("");
@@ -24,18 +24,6 @@ function ReportTable() {
     const [selectedListenRecording, setSelectedListenRecording] = useState(null);
     const [selectedTranscriptRecording, setSelectedTranscriptRecording] = useState(null);
     const [selectedRecording, setSelectedRecording] = useState(null);
-
-
-    const formatTranscription = (transcription, suspiciousWords) => {
-        const wordsArray = suspiciousWords[0].split(',').map(word => word.trim());
-        const myword = new RegExp(`(${wordsArray.join('|')})`, 'ig');
-        const parts = transcription.split(myword);
-
-        return parts.map((part, index) => (
-            myword.test(part) ? <span key={index} style={{ color: 'red', background: "yellow", padding: '0px', margin: "0px" }}>{part}</span> : part
-        ));
-    };
-
 
     useEffect(() => {
         axios.get('http://13.233.34.0:4000/groceryWord')
@@ -80,14 +68,7 @@ function ReportTable() {
         return formattedDate;
     };
 
-    // format Date in the Modal 
-    const modalDateFormat = (myStringDate) => {
-        const parsedDate = new Date(myStringDate);
 
-        const formatDate = `${parsedDate.getDate()}-${parsedDate.getMonth()}-${parsedDate.getFullYear()}`
-        return formatDate;
-
-    }
 
     // Handle Reset
     const handleReset = () => {
@@ -108,17 +89,18 @@ function ReportTable() {
 
 
     // formatTaxIdDate
-    const formatTaxIdDate=(formatdate)=>{
-        if(!formatdate) return '';
-        const date= new Date(formatdate);
-        const day= String(date.getDay()).padStart(2,"0");
-const month= String(date.getMonth()+1).padStart(2,"0");
-const year=String(date.getFullYear())
+    const formatTaxIdDate = (formatdate) => {
+        if (!formatdate) return '';
+        const date = new Date(formatdate);
+        const day = String(date.getDay()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = String(date.getFullYear())
         return `${day}-${month}-${year}`
     }
 
     // handleSubmit
     const handleSubmit = () => {
+        console.log("submitting");
         if (fromDate || toDate) {
             const formattedFromDate = formatDate(fromDate);
             const formattedToDate = formatDate(toDate);
@@ -135,13 +117,13 @@ const year=String(date.getFullYear())
             );
             // Update the flag based on whether criteria have been used
             setNotificationTableValue(criteriaUsed);
-            // console.log(notificationTable);
+            console.log(notificationTable);
 
             axios.get("http://13.233.34.0:4000/notification", {
                 params: updatedSearchCriteria,
             }).then((res) => {
                 setFilteredTable(res.data);
-                console.log(res.data);
+                console.log("handle submit data", res.data);
             }).catch((error) => {
                 console.log(error);
             });
@@ -154,16 +136,9 @@ const year=String(date.getFullYear())
         setTaxIdShow(false)
     }
 
-    // handleModalSection
-    const handleModalSection = (call_id) => {
-        setShow(true);
-        setGetID(call_id);
-    };
-
     const handleTaxId = (call_id) => {
         setTaxIdShow(true)
         setGetID(call_id);
-        console.log(taxId);
     }
 
 
@@ -250,7 +225,7 @@ const year=String(date.getFullYear())
     return (
         <>
             <div id="notification">
-                <h4 className='text-center pt-2'>Notification Reports </h4>
+                <h4 className='text-center pt-2'>User Reports </h4>
                 <div className="container pt-2" id=''>
                     <div className="row d-flex justify-content-center mb-1">
                         From
@@ -284,9 +259,9 @@ const year=String(date.getFullYear())
                                     <th scope="col">Txn Id</th>
                                     <th scope="col">No Of Records</th>
                                     <th scope="col">Date</th>
-                                    <th scope="col">Call Id</th>
+                                    {/* <th scope="col">Call Id</th> */}
                                     <th scope="col">Notification Id</th>
-                                    <th scope="col">View</th>
+                                    {/* <th scope="col">View</th> */}
                                 </tr>
                             </thead>
                             <tbody>
@@ -303,21 +278,21 @@ const year=String(date.getFullYear())
 
                                                 <td >{item.no_of_records}</td>
                                                 <td >{formatDateString(item.datetime)}</td>
-                                                <td >{item.call_id.split(',').map((callId, callIndex) => (
+                                                {/* <td >{item.call_id.split(',').map((callId, callIndex) => (
                                                     <React.Fragment key={callIndex}>
                                                         {callIndex > 0 && <br />}
                                                         {callId}
                                                     </React.Fragment>
-                                                ))}</td>
+                                                ))}</td> */}
                                                 <td >{item.sentemai}</td>
-                                                <td>
+                                                {/* <td>
                                                     <div>
                                                         <IoEyeSharp className='fs-4' onClick={() => {
                                                             handleModalSection(item.call_id);
 
                                                         }} />
                                                     </div>
-                                                </td>
+                                                </td> */}
                                             </tr>
                                         ))}
                                     </>
@@ -331,52 +306,6 @@ const year=String(date.getFullYear())
                     </div>
                 </div>
 
-                {/* Modal Update */}
-                <Modal show={show} onHide={handleClose} className='' dialogClassName="modal-lg">
-                    <Modal.Header closeButton>
-                        <Modal.Title className='text-center'>User Details</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <table className="table table-striped text-center" style={{ borderRadius: '10px', width: '100%' }}>
-                            <thead>
-                                <tr className=''>
-                                    <th scope="col" style={{ border: '1px solid black' }}>Call Id</th>
-                                    <th scope="col" style={{ border: '1px solid black' }}>Sentiment</th>
-                                    <th scope="col" style={{ border: '1px solid black' }}>Type</th>
-                                    <th scope="col" style={{ border: '1px solid black' }}>Duration</th>
-                                    <th scope="col" style={{ border: '1px solid black' }}>Date</th>
-                                    <th scope="col" style={{ border: '1px solid black' }}>Queue</th>
-                                    <th scope='col' style={{ border: '1px solid black' }}>Agent</th>
-                                    <th scope='col' style={{ border: '1px solid black' }}>Transcription</th>
-                                </tr>
-                            </thead>
-                            {modalTable.length > 0 ? (
-                                <>
-                                    {modalTable.map((data, index) => (
-                                        <tr key={index} >
-                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.call_id}</td>
-                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.sentiment_analysis}</td>
-                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.type_in}</td>
-                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.duration}</td>
-                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{modalDateFormat(data.recording_date)}</td>
-                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.queue_name}</td>
-                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.agent_name}</td>
-                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>
-                                                {formatTranscription(data.transcription, getSuspiciousWord)}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </>
-                            ) : (
-                                <div>
-                                    <h5>Data Is Not Exists</h5>
-                                </div>
-                            )}
-                        </table>
-                    </Modal.Body>
-                </Modal>
-
-
                 {/* Tax Id */}
                 <Modal show={taxIdShow} onHide={handleClose} className='' dialogClassName="modal-lg">
                     <Modal.Header closeButton>
@@ -386,6 +315,7 @@ const year=String(date.getFullYear())
                         <table className="table table-striped text-center" style={{ borderRadius: '10px', width: '100%' }}>
                             <thead>
                                 <tr className=''>
+                                    <th scope="col" style={{ border: '1px solid black', margin: "10px" }}>Sr No</th>
                                     <th scope="col" style={{ border: '1px solid black', margin: "10px" }}>Call Id</th>
                                     <th scope="col" style={{ border: '1px solid black', margin: "10px" }}>Recording</th>
                                     <th scope="col" style={{ border: '1px solid black', margin: "10px" }}>Sentiment</th>
@@ -401,6 +331,7 @@ const year=String(date.getFullYear())
                                     {console.log(modalTable)}
                                     {modalTable.map((data, index) => (
                                         <tr key={data.recording_Id}>
+                                            <td style={{ border: '1px solid black', margin: "10px" }} className="text-center data1">{index + 1}</td>
                                             <td style={{ border: '1px solid black', margin: "10px" }} className="text-center data1">{data.call_id}</td>
                                             <td style={{ border: '1px solid black', margin: "10px", padding: "10px" }} className='data1' key={index}>
                                                 <Link to="#" onClick={() => ListenRecording(data.recording_Id)} className="text-primary">
@@ -431,6 +362,64 @@ const year=String(date.getFullYear())
                                 </div>
                             )}
                         </table>
+
+                        <>
+                            {/* Audio and Transcipt Section */}
+                            {selectedRecording != null && (
+                                <div className="row" id=''>
+                                    <div className="col-md-5 col-lg-5 ">
+                                        <div id='audioPlayerbackground' className="col-md-12 col-12 col-lg-12 Audio_transcript">
+                                            <div className='w-100 p-2'>
+                                                <AudioPlayer style={{ height: "130px" }} controls className="text-center w-100" src={selectedRecording} type="audio/mp3" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="col-md-7 col-lg-7">
+                                        <div className="transcript Audio_transcript" style={{ overflowY: 'auto', maxHeight: selectedTranscriptRecording ? '150px' : 'auto', padding: "5px 10px" }}>
+                                            <span data-bs-toggle="modal" data-bs-target="#exampleModal" className='fullwidthIcons'><BsArrowsFullscreen /></span>
+                                            <span className='fs-5' style={{ paddingLeft: "40%" }}>Transcript</span>
+                                            <br />
+
+
+                                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5 text-center" id="exampleModalLabel">Transcript</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            {transcript}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {transcript}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Show the summary data */}
+                            <div class="modal fade" id="sentimentValue" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Summary</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            {console.log(sentimentValue)}
+                                            {sentimentValue}
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </>
                     </Modal.Body>
                 </Modal>
 
@@ -439,4 +428,4 @@ const year=String(date.getFullYear())
     )
 }
 
-export default ReportTable
+export default ModalReportTable

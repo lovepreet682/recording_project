@@ -9,8 +9,7 @@ import SettingPage from './components/SettingPage';
 import ShowDetails from './components/ShowDetails';
 import GroceryWord from './components/Add_Word_CRUD/GroceryWord';
 import ReportTable from './components/NotificationTask/ReportTable';
-
-
+import ModalReportTable from './components/NotificationTask/ModalReportTable';
 
 function App() {
   return (
@@ -21,6 +20,7 @@ function App() {
           <Route path='home' element={<Homepage />} />
           <Route path='glossary' element={<GroceryWord/>}/>
           <Route path='report' element={<ReportTable/>}/>
+          <Route path='modalreport' element={<ModalReportTable/>}/>
           <Route path='setting' element={<SettingPage />} />
           <Route path='network/' element={<Recording />} >
           </Route>

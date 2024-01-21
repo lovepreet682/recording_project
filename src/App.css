@@ -232,6 +232,13 @@ ul li a {
   background-color: #2b2eff;
 }
 
+/* Start reportTaxID */
+.reportTaxID:hover {
+  color: #2b2eff;
+}
+
+/* End reportTaxID */
+
 /* loginForm */
 @media (max-width: 850px) {
   #loginForm {
