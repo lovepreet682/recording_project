@@ -26,6 +26,10 @@ function ReportTable() {
     const [selectedTranscriptRecording, setSelectedTranscriptRecording] = useState(null);
     const [selectedRecording, setSelectedRecording] = useState(null);
     const [summaryModel, setSummaryModel] = useState(false);
+    const [isFullScreen, setIsFullScreen] = useState(false);
+    const handleCloseTranscriptModel=()=>{
+        setIsFullScreen(false);
+    }
 
 
 
@@ -144,7 +148,7 @@ function ReportTable() {
                 params: updatedSearchCriteria,
             }).then((res) => {
                 setFilteredTable(res.data);
-                console.log("Hello Submit",res.data);
+                console.log("Hello Submit", res.data);
             }).catch((error) => {
                 console.log(error);
             });
@@ -257,6 +261,9 @@ function ReportTable() {
         setSummaryModel(false)
     }
 
+    const handleFullScreenClick = () => {
+        setIsFullScreen(true);
+    }
     return (
         <>
             <div id="notification">
@@ -350,7 +357,7 @@ function ReportTable() {
                         <table className="table table-striped text-center" style={{ borderRadius: '10px', width: '100%' }}>
                             <thead>
                                 <tr className=''>
-                                <th scope="col" style={{ border: '1px solid black' }}>Sr No</th>
+                                    <th scope="col" style={{ border: '1px solid black' }}>Sr No</th>
                                     <th scope="col" style={{ border: '1px solid black' }}>Call Id</th>
                                     <th scope="col" style={{ border: '1px solid black' }}>Sentiment</th>
                                     <th scope="col" style={{ border: '1px solid black' }}>Type</th>
@@ -365,7 +372,7 @@ function ReportTable() {
                                 <>
                                     {modalTable.map((data, index) => (
                                         <tr key={index} >
-                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{index+1}</td>
+                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{index + 1}</td>
                                             <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.call_id}</td>
                                             <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.sentiment_analysis}</td>
                                             <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.type_in}</td>
@@ -398,7 +405,7 @@ function ReportTable() {
                         <table className="table table-striped text-center" style={{ borderRadius: '10px', width: '100%' }}>
                             <thead>
                                 <tr className=''>
-                                <th scope="col" style={{ border: '1px solid black', margin: "10px" }}>Sr No</th>
+                                    <th scope="col" style={{ border: '1px solid black', margin: "10px" }}>Sr No</th>
                                     <th scope="col" style={{ border: '1px solid black', margin: "10px" }}>Call Id</th>
                                     <th scope="col" style={{ border: '1px solid black', margin: "10px" }}>Recording</th>
                                     <th scope="col" style={{ border: '1px solid black', margin: "10px" }}>Sentiment</th>
@@ -414,7 +421,7 @@ function ReportTable() {
                                     {console.log(modalTable)}
                                     {modalTable.map((data, index) => (
                                         <tr key={data.recording_Id}>
-                                            <td style={{ border: '1px solid black', margin: "10px" }} className="text-center data1">{index+1}</td>
+                                            <td style={{ border: '1px solid black', margin: "10px" }} className="text-center data1">{index + 1}</td>
                                             <td style={{ border: '1px solid black', margin: "10px" }} className="text-center data1">{data.call_id}</td>
                                             <td style={{ border: '1px solid black', margin: "10px", padding: "10px" }} className='data1' key={index}>
                                                 <Link to="#" onClick={() => ListenRecording(data.recording_Id)} className="text-primary">
@@ -460,25 +467,9 @@ function ReportTable() {
 
                                     <div className="col-md-7 col-lg-7">
                                         <div className="transcript Audio_transcript" style={{ overflowY: 'auto', maxHeight: selectedTranscriptRecording ? '150px' : 'auto', padding: "5px 10px" }}>
-                                            <span data-bs-toggle="modal" data-bs-target="#exampleModal" className='fullwidthIcons'><BsArrowsFullscreen /></span>
+                                        <span className='fullwidthIcons' onClick={() => { handleFullScreenClick()}}><BsArrowsFullscreen /></span>
                                             <span className='fs-5' style={{ paddingLeft: "40%" }}>Transcript</span>
                                             <br />
-
-
-                                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h1 class="modal-title fs-5 text-center" id="exampleModalLabel">Transcript</h1>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            {transcript}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
                                             {transcript}
                                         </div>
                                     </div>
@@ -496,6 +487,16 @@ function ReportTable() {
                     {console.log(sentimentValue)}
                     <Modal.Body>{sentimentValue}</Modal.Body>
                 </Modal>
+
+                {/* React-bootstrap for transcript Full screen*/}
+                <Modal show={isFullScreen} onHide={handleCloseTranscriptModel} style={{ backdropFilter: isFullScreen ? 'blur(1px)' : "none" }}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Transcipt</Modal.Title>
+                    </Modal.Header>
+                    {console.log(transcript)}
+                    <Modal.Body>{transcript}</Modal.Body>
+                </Modal>
+
             </div>
         </>
     )
