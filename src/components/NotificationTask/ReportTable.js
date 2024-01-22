@@ -144,7 +144,7 @@ function ReportTable() {
                 params: updatedSearchCriteria,
             }).then((res) => {
                 setFilteredTable(res.data);
-                console.log(res.data);
+                console.log("Hello Submit",res.data);
             }).catch((error) => {
                 console.log(error);
             });
@@ -350,6 +350,7 @@ function ReportTable() {
                         <table className="table table-striped text-center" style={{ borderRadius: '10px', width: '100%' }}>
                             <thead>
                                 <tr className=''>
+                                <th scope="col" style={{ border: '1px solid black' }}>Sr No</th>
                                     <th scope="col" style={{ border: '1px solid black' }}>Call Id</th>
                                     <th scope="col" style={{ border: '1px solid black' }}>Sentiment</th>
                                     <th scope="col" style={{ border: '1px solid black' }}>Type</th>
@@ -364,6 +365,7 @@ function ReportTable() {
                                 <>
                                     {modalTable.map((data, index) => (
                                         <tr key={index} >
+                                            <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{index+1}</td>
                                             <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.call_id}</td>
                                             <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.sentiment_analysis}</td>
                                             <td className="data1" style={{ border: '1px solid black', margin: "10px" }}>{data.type_in}</td>
@@ -396,6 +398,7 @@ function ReportTable() {
                         <table className="table table-striped text-center" style={{ borderRadius: '10px', width: '100%' }}>
                             <thead>
                                 <tr className=''>
+                                <th scope="col" style={{ border: '1px solid black', margin: "10px" }}>Sr No</th>
                                     <th scope="col" style={{ border: '1px solid black', margin: "10px" }}>Call Id</th>
                                     <th scope="col" style={{ border: '1px solid black', margin: "10px" }}>Recording</th>
                                     <th scope="col" style={{ border: '1px solid black', margin: "10px" }}>Sentiment</th>
@@ -411,6 +414,7 @@ function ReportTable() {
                                     {console.log(modalTable)}
                                     {modalTable.map((data, index) => (
                                         <tr key={data.recording_Id}>
+                                            <td style={{ border: '1px solid black', margin: "10px" }} className="text-center data1">{index+1}</td>
                                             <td style={{ border: '1px solid black', margin: "10px" }} className="text-center data1">{data.call_id}</td>
                                             <td style={{ border: '1px solid black', margin: "10px", padding: "10px" }} className='data1' key={index}>
                                                 <Link to="#" onClick={() => ListenRecording(data.recording_Id)} className="text-primary">

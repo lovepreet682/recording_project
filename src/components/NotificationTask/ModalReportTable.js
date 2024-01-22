@@ -24,6 +24,7 @@ function ModalReportTable() {
     const [selectedListenRecording, setSelectedListenRecording] = useState(null);
     const [selectedTranscriptRecording, setSelectedTranscriptRecording] = useState(null);
     const [selectedRecording, setSelectedRecording] = useState(null);
+    const [isFullScreen, setIsFullScreen] = useState(false);
 
     // 10 Record's API
     useEffect(() => {
@@ -231,6 +232,14 @@ function ModalReportTable() {
         setSummaryModel(false)
     }
 
+    const handleFullScreenClick = () => {
+        setIsFullScreen(true);
+    }
+
+    const handleCloseTranscriptModel=()=>{
+        setIsFullScreen(false);
+    }
+
     return (
         <>
             <div id="notification">
@@ -386,12 +395,11 @@ function ModalReportTable() {
 
                                     <div className="col-md-7 col-lg-7">
                                         <div className="transcript Audio_transcript" style={{ overflowY: 'auto', maxHeight: selectedTranscriptRecording ? '150px' : 'auto', padding: "5px 10px" }}>
-                                            <span data-bs-toggle="modal" data-bs-target="#exampleModal" className='fullwidthIcons'><BsArrowsFullscreen /></span>
+                                            <span className='fullwidthIcons' onClick={() => { handleFullScreenClick()}}><BsArrowsFullscreen /></span>
                                             <span className='fs-5' style={{ paddingLeft: "40%" }}>Transcript</span>
                                             <br />
 
-
-                                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            {/* <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -403,7 +411,7 @@ function ModalReportTable() {
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> */}
 
                                             {transcript}
                                         </div>
@@ -414,13 +422,22 @@ function ModalReportTable() {
                     </Modal.Body>
                 </Modal>
 
-                {/* React-bootstrap */}
+                {/* React-bootstrap for Summary */}
                 <Modal show={summaryModel} onHide={handleCloseSummaryModel} style={{ backdropFilter: summaryModel ? 'blur(1px)' : "none" }}>
                     <Modal.Header closeButton>
                         <Modal.Title>Summary</Modal.Title>
                     </Modal.Header>
                     {console.log(sentimentValue)}
                     <Modal.Body>{sentimentValue}</Modal.Body>
+                </Modal>
+
+                {/* React-bootstrap for transcript Full screen*/}
+                <Modal show={isFullScreen} onHide={handleCloseTranscriptModel} style={{ backdropFilter: summaryModel ? 'blur(1px)' : "none" }}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Transcipt</Modal.Title>
+                    </Modal.Header>
+                    {console.log(transcript)}
+                    <Modal.Body>{transcript}</Modal.Body>
                 </Modal>
             </div>
         </>
