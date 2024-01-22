@@ -13,6 +13,7 @@ function ModalReportTable() {
     const [toDate, setToDate] = useState('');
     const [filteredTable, setFilteredTable] = useState([]);
     const [show, setShow] = useState(false);
+    const [summaryModel, setSummaryModel] = useState(false);
     const [modalTable, setModalTable] = useState([]);
     const [getID, setGetID] = useState('');
     const [notificationTableValue, setNotificationTableValue] = useState([]);
@@ -133,7 +134,9 @@ function ModalReportTable() {
     // handleClose
     const handleClose = () => {
         setShow(false);
-        setTaxIdShow(false)
+        setTaxIdShow(false);
+        setSelectedRecording(null)
+        setTranscript('')
     }
 
     const handleTaxId = (call_id) => {
@@ -217,15 +220,21 @@ function ModalReportTable() {
 
     const getSeummary = (id) => {
         console.log(id);
+        setSummaryModel(true)
         axios.get(`http://13.233.34.0:4000/summary/${id}`).then((res) => {
             setSentimentValue(res.data);
         })
     }
 
+
+    const handleCloseSummaryModel=()=>{
+        setSummaryModel(false)
+    }
+
     return (
         <>
             <div id="notification">
-                <h4 className='text-center pt-2'>User Reports </h4>
+                <h4 className='text-center pt-2'>Records Report </h4>
                 <div className="container pt-2" id=''>
                     <div className="row d-flex justify-content-center mb-1">
                         From
@@ -342,7 +351,7 @@ function ModalReportTable() {
                                                     Transcript
                                                 </Link>
                                                 ||
-                                                <Link to="#" onClick={() => getSeummary(data.recording_Id)} data-bs-toggle="modal" data-bs-target="#sentimentValue" className="text-primary">
+                                                <Link to="#" onClick={() => getSeummary(data.recording_Id)} className="text-primary">
                                                     Summary
                                                 </Link>
                                             </td>
@@ -401,28 +410,18 @@ function ModalReportTable() {
                                     </div>
                                 </div>
                             )}
-
-                            {/* Show the summary data */}
-                            <div class="modal fade" id="sentimentValue" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Summary</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            {console.log(sentimentValue)}
-                                            {sentimentValue}
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-
                         </>
                     </Modal.Body>
                 </Modal>
 
+                {/* React-bootstrap */}
+                <Modal show={summaryModel} onHide={handleCloseSummaryModel} style={{backdropFilter:summaryModel? 'blur(1px)':"none"}}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Summary</Modal.Title>
+                    </Modal.Header>
+                    {console.log(sentimentValue)}
+                    <Modal.Body>{sentimentValue}</Modal.Body>
+                </Modal>
             </div>
         </>
     )
