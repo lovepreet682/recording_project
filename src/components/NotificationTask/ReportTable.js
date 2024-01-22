@@ -4,7 +4,8 @@ import { IoEyeSharp } from "react-icons/io5";
 import Modal from 'react-bootstrap/Modal';
 import DownloadFiles from '../DownloadReport/DownloadFiles';
 import { Link } from 'react-router-dom';
-// import GroCeryWordTable from '../Add_Word_CRUD/GroCeryWordTable';
+import AudioPlayer from 'react-h5-audio-player';
+import { BsArrowsFullscreen } from 'react-icons/bs'
 
 function ReportTable() {
     const [notificationTable, setNotificationTable] = useState([]);
@@ -24,6 +25,8 @@ function ReportTable() {
     const [selectedListenRecording, setSelectedListenRecording] = useState(null);
     const [selectedTranscriptRecording, setSelectedTranscriptRecording] = useState(null);
     const [selectedRecording, setSelectedRecording] = useState(null);
+    const [summaryModel, setSummaryModel] = useState(false);
+
 
 
     const formatTranscription = (transcription, suspiciousWords) => {
@@ -108,12 +111,12 @@ function ReportTable() {
 
 
     // formatTaxIdDate
-    const formatTaxIdDate=(formatdate)=>{
-        if(!formatdate) return '';
-        const date= new Date(formatdate);
-        const day= String(date.getDay()).padStart(2,"0");
-const month= String(date.getMonth()+1).padStart(2,"0");
-const year=String(date.getFullYear())
+    const formatTaxIdDate = (formatdate) => {
+        if (!formatdate) return '';
+        const date = new Date(formatdate);
+        const day = String(date.getDay()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = String(date.getFullYear())
         return `${day}-${month}-${year}`
     }
 
@@ -152,6 +155,8 @@ const year=String(date.getFullYear())
     const handleClose = () => {
         setShow(false);
         setTaxIdShow(false)
+        setSelectedRecording(null)
+        setTranscript('')
     }
 
     // handleModalSection
@@ -242,9 +247,14 @@ const year=String(date.getFullYear())
 
     const getSeummary = (id) => {
         console.log(id);
+        setSummaryModel(true)
         axios.get(`http://13.233.34.0:4000/summary/${id}`).then((res) => {
             setSentimentValue(res.data);
         })
+    }
+
+    const handleCloseSummaryModel = () => {
+        setSummaryModel(false)
     }
 
     return (
@@ -411,7 +421,7 @@ const year=String(date.getFullYear())
                                                     Transcript
                                                 </Link>
                                                 ||
-                                                <Link to="#" onClick={() => getSeummary(data.recording_Id)} data-bs-toggle="modal" data-bs-target="#sentimentValue" className="text-primary">
+                                                <Link to="#" onClick={() => getSeummary(data.recording_Id)} className="text-primary">
                                                     Summary
                                                 </Link>
                                             </td>
@@ -431,9 +441,57 @@ const year=String(date.getFullYear())
                                 </div>
                             )}
                         </table>
+
+                        <>
+                            {/* Audio and Transcipt Section */}
+                            {selectedRecording != null && (
+                                <div className="row" id=''>
+                                    <div className="col-md-5 col-lg-5 ">
+                                        <div id='audioPlayerbackground' className="col-md-12 col-12 col-lg-12 Audio_transcript">
+                                            <div className='w-100 p-2'>
+                                                <AudioPlayer style={{ height: "130px" }} controls className="text-center w-100" src={selectedRecording} type="audio/mp3" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="col-md-7 col-lg-7">
+                                        <div className="transcript Audio_transcript" style={{ overflowY: 'auto', maxHeight: selectedTranscriptRecording ? '150px' : 'auto', padding: "5px 10px" }}>
+                                            <span data-bs-toggle="modal" data-bs-target="#exampleModal" className='fullwidthIcons'><BsArrowsFullscreen /></span>
+                                            <span className='fs-5' style={{ paddingLeft: "40%" }}>Transcript</span>
+                                            <br />
+
+
+                                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5 text-center" id="exampleModalLabel">Transcript</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            {transcript}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {transcript}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </>
                     </Modal.Body>
                 </Modal>
 
+                {/* React-bootstrap */}
+                <Modal show={summaryModel} onHide={handleCloseSummaryModel} style={{ backdropFilter: summaryModel ? 'blur(1px)' : "none" }}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Summary</Modal.Title>
+                    </Modal.Header>
+                    {console.log(sentimentValue)}
+                    <Modal.Body>{sentimentValue}</Modal.Body>
+                </Modal>
             </div>
         </>
     )

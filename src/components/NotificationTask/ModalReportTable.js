@@ -19,13 +19,13 @@ function ModalReportTable() {
     const [notificationTableValue, setNotificationTableValue] = useState([]);
     const [getSuspiciousWord, setGetSuspiciousWord] = useState([]);
     const [taxIdShow, setTaxIdShow] = useState(false);
-
     const [sentimentValue, setSentimentValue] = useState("");
     const [transcript, setTranscript] = useState("");
     const [selectedListenRecording, setSelectedListenRecording] = useState(null);
     const [selectedTranscriptRecording, setSelectedTranscriptRecording] = useState(null);
     const [selectedRecording, setSelectedRecording] = useState(null);
 
+    // 10 Record's API
     useEffect(() => {
         axios.get('http://13.233.34.0:4000/groceryWord')
             .then((res) => {
@@ -227,7 +227,7 @@ function ModalReportTable() {
     }
 
 
-    const handleCloseSummaryModel=()=>{
+    const handleCloseSummaryModel = () => {
         setSummaryModel(false)
     }
 
@@ -415,7 +415,7 @@ function ModalReportTable() {
                 </Modal>
 
                 {/* React-bootstrap */}
-                <Modal show={summaryModel} onHide={handleCloseSummaryModel} style={{backdropFilter:summaryModel? 'blur(1px)':"none"}}>
+                <Modal show={summaryModel} onHide={handleCloseSummaryModel} style={{ backdropFilter: summaryModel ? 'blur(1px)' : "none" }}>
                     <Modal.Header closeButton>
                         <Modal.Title>Summary</Modal.Title>
                     </Modal.Header>
