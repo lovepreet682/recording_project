@@ -8,6 +8,9 @@ import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import Modal from 'react-bootstrap/Modal';
 import Table from 'react-bootstrap/Table';
+import { RiUserVoiceLine } from "react-icons/ri";
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+
 
 
 function ShowDetails() {
@@ -23,6 +26,22 @@ function ShowDetails() {
     const [wordSearchEmpty, setWordSearchEmpty] = useState(false)
     const [modalVisible, setModalVisible] = useState(false);
     const [loadingQueryData, setLoadingQueryData] = useState(false);
+    const { transcript: voiceTranscript, listening, resetTranscript } = useSpeechRecognition();
+    const handleSpeechRecognition = () => {
+        if (!listening) {
+            resetTranscript();
+            SpeechRecognition.startListening();
+        } else {
+            SpeechRecognition.stopListening();
+            setQuerySearch(voiceTranscript);
+        }
+    };
+
+    useEffect(() => {
+        setQuerySearch(voiceTranscript);
+        console.log(voiceTranscript);
+    }, [voiceTranscript]);
+
 
     const handleClose = () => {
         setModalVisible(false);
@@ -337,6 +356,9 @@ function ShowDetails() {
         ));
     };
 
+    // const stopListening=()=>{
+
+    // }
     return (
         <div className="pt-1" id='showDetails'>
             <div className="row m-0" >
@@ -406,9 +428,11 @@ function ShowDetails() {
                                 onChange={(e) => {
                                     console.log(e.target.value);
                                     setQuerySearch(e.target.value);
-                                }} className='form-control' />
-
-                            <button type='button' onClick={handleQuerySearch} className='btn btn-primary' style={{ width: '150px', marginLeft: "10px" }}>Search Query</button>
+                                }} className='form-control me-2' />
+                            <button className='btn btn-primary d-flex' onClick={handleSpeechRecognition}>
+                                <span className='mx-1 fs-5'><RiUserVoiceLine /></span> <span className=''>{listening ? 'Stop' : 'Start'}</span>
+                            </button>
+                            <button type='button' onClick={handleQuerySearch} className='btn btn-primary' style={{ width: '180px', marginLeft: "10px" }}>Search Query</button>
                         </div>
                         <small className='text-danger mb-2'>{errorQuerySearch}</small>
                     </div>
@@ -442,7 +466,7 @@ function ShowDetails() {
                                         <table className="table table-striped text-center" style={{ borderRadius: '10px' }}>
                                             <thead>
                                                 <tr className=''>
-                                                <th scope="col">Call Id</th>
+                                                    <th scope="col">Call Id</th>
                                                     <th scope="col">Recording</th>
                                                     <th scope="col">Sentiment</th>
                                                     <th scope="col text-center">Type</th>
