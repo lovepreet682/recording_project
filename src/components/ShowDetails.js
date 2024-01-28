@@ -26,7 +26,9 @@ function ShowDetails() {
     const [wordSearchEmpty, setWordSearchEmpty] = useState(false)
     const [modalVisible, setModalVisible] = useState(false);
     const [loadingQueryData, setLoadingQueryData] = useState(false);
+    const [listeningWordSearch, setListeningWordSearch] = useState(false);
     const { transcript: voiceTranscript, listening, resetTranscript } = useSpeechRecognition();
+
     const handleSpeechRecognition = () => {
         if (!listening) {
             resetTranscript();
@@ -41,6 +43,32 @@ function ShowDetails() {
         setQuerySearch(voiceTranscript);
         console.log(voiceTranscript);
     }, [voiceTranscript]);
+
+
+
+
+    // handle WordSearch speech to text
+    let recognition;
+    const handleStartListening = () => {
+        if (!listeningWordSearch) {
+            recognition = new window.webkitSpeechRecognition();
+            recognition.lang = 'en-US';
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                setWordSearch(transcript.split(' ').join(', '));
+            };
+
+            recognition.onend = () => {
+                setListeningWordSearch(false);
+            };
+
+            recognition.start();
+            setListeningWordSearch(true);
+        } else {
+            recognition.stop();
+        }
+    };
 
 
     const handleClose = () => {
@@ -356,9 +384,7 @@ function ShowDetails() {
         ));
     };
 
-    // const stopListening=()=>{
 
-    // }
     return (
         <div className="pt-1" id='showDetails'>
             <div className="row m-0" >
@@ -438,8 +464,16 @@ function ShowDetails() {
                     </div>
 
                     <div className="row">
-                        <div className="col-12">
-                            <input type="text" className='form-control mb-3' name='wordSearch' value={wordSearch} onChange={handleWordSearchChange} placeholder='Word Search Here' />
+                        <div className="col-12 d-flex">
+                            <div className="col-10">
+                                <input type="text" className='form-control mb-3' name='wordSearch' value={wordSearch} onChange={handleWordSearchChange} placeholder='Word Search Here' />
+                            </div>
+                            <div className="col-2">
+                                <button className='btn btn-primary  d-flex' style={{marginLeft:"18px", width:"130px", textAlign:"center"}} onClick={handleStartListening}>
+                                    <span className='mx-1 fs-5'><RiUserVoiceLine /></span>
+                                    <span className=''>{listeningWordSearch ? 'Stop' : 'Start'}</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
